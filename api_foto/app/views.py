@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly, IsAu
 from .serializers import UserSerializer, AlbumSerializer, AlbumImageSerializer
 from .models import Album, AlbumImage
 from django.shortcuts import get_object_or_404
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, IsOwnerOrRead
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -21,13 +21,27 @@ class UserViewSet(viewsets.ModelViewSet):
 class AlbumViewSet(viewsets.ModelViewSet):
     queryset = Album.objects.all()
     serializer_class = AlbumSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-   # filter_backends = [DjangoFilterBackend]
-   # filterset_fields = ["genres"]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
+
+class AlbumImageViewSet(viewsets.ModelViewSet):
+    serializer_class = AlbumImageSerializer
+    permission_classes = [IsAuthenticated, IsOwnerOrRead]
+
+    def get_queryset(self):
+        album = get_object_or_404(Album, id=self.kwargs['album_pk'])
+        queryset = AlbumImage.objects.filter(album=album)
+        return queryset
+
+    def perform_create(self, serializer):
+        album = get_object_or_404(Album, id=self.kwargs['album_pk'])
+        serializer.save(album=album)
+
+
+'''
 
 class AlbumImageViewSet(viewsets.ModelViewSet):
     queryset = AlbumImage.objects.all()
@@ -45,7 +59,6 @@ class AlbumImageViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user, album=self.get_post())
 
-'''
 class AlbumImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     queryset = AlbumImage.objects.all()

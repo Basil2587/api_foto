@@ -10,25 +10,28 @@ User = get_user_model()
 class Tag(models.Model):
     name = models.CharField(max_length=20)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
 class Album(models.Model):
     title = models.CharField(max_length=70)
-    author = models.ForeignKey(User, on_delete=models.CASCADE,
+    author = models.ForeignKey(User, null=True,
+                               blank=True, on_delete=models.CASCADE,
                                related_name="album")
     date_created = models.DateTimeField("Дата создания", auto_now_add=True)
     date_modified = models.DateTimeField(auto_now_add=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
 class AlbumImage(models.Model):
     image_id = models.AutoField(primary_key=True)
     album = models.ForeignKey(Album,
-                              db_column='album_id', on_delete=models.CASCADE, verbose_name="фотоальбом")
+                              db_column='album_id',  null=True,
+                              on_delete=models.CASCADE,
+                              verbose_name="фотоальбом")
     title = models.CharField(max_length=255)
     original_image = models.ImageField(
         upload_to="album/", blank=True, null=True, verbose_name="Картинка")
@@ -39,5 +42,5 @@ class AlbumImage(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title

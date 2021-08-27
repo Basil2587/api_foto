@@ -32,17 +32,12 @@ class AlbumSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source="author.username")
 
     class Meta:
-        fields = ("id", "title", "author", "image", "date_created")
+        fields = ("id", "title", "author", "date_created")
         model = Album
 
 
 class AlbumImageSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source="author.username")
 
     class Meta:
-        fields = (
-            "id",
-            "author",
-            "album",
-            "title", "original_image", "small_image", "tag", "date_created")
+        fields = '__all__'
         model = AlbumImage

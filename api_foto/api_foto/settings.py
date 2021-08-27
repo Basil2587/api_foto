@@ -117,6 +117,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=30)
 }
