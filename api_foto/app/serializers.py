@@ -30,13 +30,21 @@ class UserSerializer(serializers.ModelSerializer):
 
 class AlbumSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source="author.username")
+    foto_count = serializers.SerializerMethodField()
+
+    def get_foto_count(self, obj):
+        foto_count = AlbumImage.objects.filter(album__in=[obj]).count()
+        return foto_count
 
     class Meta:
-        fields = ("id", "title", "author", "date_created")
+        fields = ("id", "title", "author", "foto_count", "date_created")
         model = Album
 
 
 class AlbumImageSerializer(serializers.ModelSerializer):
+    small_image = serializers.ImageField()
+    tag = serializers.SlugRelatedField(
+            many=True, slug_field='name', read_only=True)
 
     class Meta:
         fields = '__all__'

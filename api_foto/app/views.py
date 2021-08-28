@@ -1,10 +1,13 @@
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import UserSerializer, AlbumSerializer, AlbumImageSerializer
 from .models import Album, AlbumImage
 from django.shortcuts import get_object_or_404
-from .permissions import IsOwnerOrReadOnly, IsOwnerOrRead
+from .permissions import IsOwnerOrReadOnly
+
+
+User = get_user_model()
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -23,13 +26,18 @@ class AlbumViewSet(viewsets.ModelViewSet):
     serializer_class = AlbumSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
+    def get_queryset(self):
+        users = get_object_or_404(User, id=self.kwargs['users_pk'])
+        queryset = Album.objects.filter(author=users)
+        return queryset
+
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
 
 class AlbumImageViewSet(viewsets.ModelViewSet):
     serializer_class = AlbumImageSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrRead]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         album = get_object_or_404(Album, id=self.kwargs['album_pk'])
@@ -39,29 +47,3 @@ class AlbumImageViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         album = get_object_or_404(Album, id=self.kwargs['album_pk'])
         serializer.save(album=album)
-
-
-'''
-
-class AlbumImageViewSet(viewsets.ModelViewSet):
-    queryset = AlbumImage.objects.all()
-    serializer_class = AlbumImageSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
-
-    def get_queryset(self):
-        queryset = AlbumImage.objects.filter(album=self.get_post()).all()
-        return queryset
-
-    def get_post(self):
-        album = get_object_or_404(Album, id=self.kwargs["album_id"])
-        return album
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user, album=self.get_post())
-
-class AlbumImageViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
-    queryset = AlbumImage.objects.all()
-    serializer_class = AlbumImageSerializer
-
-'''

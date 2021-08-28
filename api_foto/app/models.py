@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
+from .file_size import file_size
 
 
 User = get_user_model()
@@ -34,7 +35,7 @@ class AlbumImage(models.Model):
                               verbose_name="фотоальбом")
     title = models.CharField(max_length=255)
     original_image = models.ImageField(
-        upload_to="album/", blank=True, null=True, verbose_name="Картинка")
+        upload_to="album/", verbose_name="Foto", validators=[file_size])
     small_image = ImageSpecField(
         source='original_image', processors=[ResizeToFit(150)],
         format='JPEG', options={'quality': 80})
