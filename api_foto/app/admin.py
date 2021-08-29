@@ -21,7 +21,7 @@ class AlbumImageAdmin(admin.ModelAdmin):
     list_display = ("image_id", "album", "title",
                     "original_image", "small_image", "date_created")
     search_fields = ("album",)
-    list_filter = ("album", "tag",)
+    list_filter = ("album", "tag", "date_created")
     empty_value_display = "-пусто-"
 
 
