@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'app',
     'imagekit',
     'drf_yasg',
+    'oauth2_provider',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [

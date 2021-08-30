@@ -16,7 +16,7 @@ class Tag(models.Model):
 
 
 class Album(models.Model):
-    title = models.CharField(max_length=70)
+    title = models.CharField(max_length=70, verbose_name="Название альбома")
     author = models.ForeignKey(User, null=True,
                                blank=True, on_delete=models.CASCADE,
                                related_name="album")
@@ -32,15 +32,16 @@ class AlbumImage(models.Model):
     album = models.ForeignKey(Album,
                               db_column='album_id',  null=True,
                               on_delete=models.CASCADE,
-                              verbose_name="фотоальбом")
-    title = models.CharField(max_length=255)
+                              verbose_name="Фотоальбом")
+    title = models.CharField(max_length=100)
     original_image = models.ImageField(
-        upload_to="album/", verbose_name="Foto", validators=[file_size])
+        upload_to="album/", verbose_name="Изображение", validators=[file_size])
     small_image = ImageSpecField(
         source='original_image', processors=[ResizeToFit(150)],
         format='JPEG', options={'quality': 80})
     tag = models.ManyToManyField(Tag, verbose_name="Тэг")
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(
+        auto_now_add=True, verbose_name="Дата создания")
     date_modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
