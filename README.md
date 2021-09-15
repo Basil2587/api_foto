@@ -26,7 +26,7 @@
 * Удалить пользователя.
 
 ## Стек
- 
+
 Python 3, Django 3.2.6, Django REST Framework, SQLite3, GIT
 
 
