@@ -69,10 +69,3 @@ http://localhost:8000/swagger/
   PATCH http://localhost:8000/api/v1/users/{id}/  #Частично обновить данные о пользователе по id 
    
   DELETE http://localhost:8000/api/v1/users/{id}/ #Удалить пользователя по id 
-  
-
-   JWT-токен: 
-    
-   http://localhost:8000/api/v1/token/           #Получить JWT-токен 
-    
-   http://localhost:8000/api/v1/token/refresh/   #Обновить JWT-токен 
