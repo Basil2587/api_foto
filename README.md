@@ -76,4 +76,3 @@ http://localhost:8000/swagger/
    http://localhost:8000/api/v1/token/           #Получить JWT-токен 
     
    http://localhost:8000/api/v1/token/refresh/   #Обновить JWT-токен 
-
